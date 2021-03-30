@@ -2,7 +2,7 @@ package core
 
 import(
 	"errors"
-	userSvc "github.com/petersantoso94/golang-microservices/UserService"
+	userSvc "github.com/petersantoso94/golang-microservices/user-service"
 )
 
 type service struct {

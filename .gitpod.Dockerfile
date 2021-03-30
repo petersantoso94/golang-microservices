@@ -10,5 +10,8 @@ RUN sudo apt-get update && sudo apt-get install -y \
         golang \
     && sudo apt-get clean && sudo rm -rf /var/cache/apt/* && sudo rm -rf /var/lib/apt/lists/* && sudo rm -rf /tmp/*
 
-RUN sudo go get -d -u github.com/golang/protobuf/protoc-gen-go && \
-    sudo go install github.com/golang/protobuf/protoc-gen-go
+# install protoc
+RUN sudo curl -OL https://github.com/google/protobuf/releases/download/v3.7.1/$PROTOC_ZIP && \
+    sudo unzip -o $PROTOC_ZIP -d /usr/local bin/protoc && \
+    sudo unzip -o $PROTOC_ZIP -d /usr/local include/* && \
+    rm -f $PROTOC_ZIP
