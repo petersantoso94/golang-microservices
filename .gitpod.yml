@@ -1,0 +1,6 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - command: |
+        go install google.golang.org/protobuf/cmd/protoc-gen-go
