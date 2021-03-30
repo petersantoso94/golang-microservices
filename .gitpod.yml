@@ -4,5 +4,5 @@ tasks:
   - command: |
         export GO111MODULE=on
         go get google.golang.org/protobuf/cmd/protoc-gen-go
-        google.golang.org/grpc/cmd/protoc-gen-go-grpc
+        go get google.golang.org/grpc/cmd/protoc-gen-go-grpc
         export PATH="$PATH:$(go env GOPATH)/bin"
