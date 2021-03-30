@@ -7,7 +7,7 @@ FROM gitpod/workspace-postgres
 # More information: https://www.gitpod.io/docs/config-docker/
 # Install Golang
 RUN sudo apt-get update && sudo apt-get install -y \
-        golang \
+        golang protobuf-compiler \
     && sudo apt-get clean && sudo rm -rf /var/cache/apt/* && sudo rm -rf /var/lib/apt/lists/* && sudo rm -rf /tmp/*
 
 # install protoc

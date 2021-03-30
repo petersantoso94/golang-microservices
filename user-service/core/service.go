@@ -1,7 +1,6 @@
 package core
 
 import(
-	"errors"
 	userSvc "github.com/petersantoso94/golang-microservices/user-service"
 )
 

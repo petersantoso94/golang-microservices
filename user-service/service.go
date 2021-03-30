@@ -1,4 +1,4 @@
-package user-service
+package main
 
 import "errors"
 
