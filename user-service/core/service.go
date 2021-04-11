@@ -1,40 +1,45 @@
 package core
 
-import(
+import (
 	userSvc "github.com/petersantoso94/golang-microservices/user-service"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type service struct {
-  // a database dependency would go here but instead we're going to have a static map
-  m map[int64]userSvc.User
+	db *gorm.DB
 }
 
 // NewService instantiates a new Service.
-func NewService( /* a database connection would be injected here */ ) userSvc.Service {
-  return &service{
-    m: map[int64]userSvc.User{
-      1: {ID: 1, Name: "Alice"},
-      2: {ID: 2, Name: "Bob"},
-      3: {ID: 3, Name: "Carol"},
-    },
-  }
+func NewService() userSvc.Service {
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	// Migrate the schema
+	db.AutoMigrate(&userSvc.User{})
+	return &service{
+		db: db,
+	}
 }
 
 func (s *service) GetUser(id int64) (result userSvc.User, err error) {
-  // instead of querying a database, we just query our static map
-  if result, ok := s.m[id]; ok {
-    return result, nil
-  }
-  return result, userSvc.ErrNotFound
+	if ok := s.db.First(&result, id); ok.RowsAffected > 0 {
+		return result, nil
+	}
+	return result, userSvc.ErrNotFound
 }
 
-func (s *service) GetUsers(ids []int64) (result map[int64]userSvc.User, err error) {
-  // always a good idea to return non-nil maps to avoid nil pointer dereferences
-  result = map[int64]userSvc.User{}
-  for _, id := range ids {
-    if u, ok := s.m[id]; ok {
-      result[id] = u
-    }
-  }
-  return
+func (s *service) GetUsers() (result []userSvc.User, err error) {
+	if ok := s.db.Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
+		return nil, ok.Error
+	}
+	return
+}
+
+func (s *service) CreateUser(user userSvc.User) (id int64, err error) {
+	if ok := s.db.Create(&user); ok.RowsAffected == 0 || ok.Error != nil {
+		return 0, ok.Error
+	}
+	return user.ID, nil
 }

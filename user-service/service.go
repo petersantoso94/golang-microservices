@@ -1,16 +1,24 @@
 package user
 
-import "errors"
+import (
+	"errors"
+
+	"gorm.io/gorm"
+)
 
 // ErrNotFound signifies that a single requested object was not found.
- var ErrNotFound = errors.New("not found")
+var ErrNotFound = errors.New("not found")
+
 // User is a user business object.
 type User struct {
-   ID int64
-   Name string
+	ID   int64 `gorm:"primarykey"`
+	Name string
+	gorm.Model
 }
+
 // Service defines the interface exposed by this package.
 type Service interface {
-   GetUser(id int64) (User, error)
-   GetUsers(ids []int64) (map[int64]User, error)
+	CreateUser(User) (int64, error)
+	GetUser(id int64) (User, error)
+	GetUsers() ([]User, error)
 }

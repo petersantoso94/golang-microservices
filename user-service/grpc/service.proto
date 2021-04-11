@@ -2,16 +2,28 @@ syntax = "proto3";
 option go_package = "github.com/petersantoso94/golang-microservices/grpc";
 package grpc;
 service UserService {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
   rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {}
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
 }
 message User {
   int64 id = 1;
   string name = 2;
 }
-message GetUsersRequest {
-  repeated int64 ids = 1; 
+message GetUserRequest {
+  int64 id = 1; 
 }
-  
+message GetUserResponse {
+  User user = 1; 
+}
+message GetUsersRequest {
+}
 message GetUsersResponse {
   repeated User users = 1; 
+}
+message CreateUserRequest{
+  User user = 1;
+}
+message CreateUserResponse{
+  int64 id = 1;
 }

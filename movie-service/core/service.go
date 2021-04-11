@@ -2,6 +2,7 @@ package core
 
 import (
 	movieSvc "github.com/petersantoso94/golang-microservices/movie-service"
+	"github.com/petersantoso94/golang-microservices/user-service"
 )
 
 type service struct {
@@ -14,9 +15,9 @@ type service struct {
 func NewService( /* a database connection would be injected here */ ) movieSvc.Service {
 	return &service{
 		m: map[int64]movieSvc.Movie{
-			1: {ID: 1, Name: "Alice"},
-			2: {ID: 2, Name: "Bob"},
-			3: {ID: 3, Name: "Carol"},
+			1: {ID: 1, Name: "Ironman", Owner: user.User{ID: 1}},
+			2: {ID: 2, Name: "Shrek", Owner: user.User{ID: 2}},
+			3: {ID: 3, Name: "SpongeBob", Owner: user.User{ID: 2}},
 		},
 	}
 }
