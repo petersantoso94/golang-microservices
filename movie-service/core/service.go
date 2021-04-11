@@ -2,7 +2,6 @@ package core
 
 import (
 	movieSvc "github.com/petersantoso94/golang-microservices/movie-service"
-	userSvc "github.com/petersantoso94/golang-microservices/user-service"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -32,7 +31,7 @@ func (s *service) GetMovies() (result []*movieSvc.Movie, err error) {
 }
 
 func (s *service) GetUserMovie(userId int64) (result []*movieSvc.Movie, err error) {
-	if ok := s.db.Where(&userSvc.User{ID: userId}).Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
+	if ok := s.db.Where(&movieSvc.Movie{OwnerID: userId}).Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
 		return nil, ok.Error
 	}
 	return result, nil

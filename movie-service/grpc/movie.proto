@@ -6,14 +6,10 @@ service MovieService {
     rpc GetUserMovie (GetUserMovieRequest) returns (GetUserMovieResponse) {}
     rpc CreateMovie (CreateMovieRequest) returns (EmptyResponse) {}
 }
-message User{
-    int64 id = 1;
-    string name = 2;
-}
 message Movie {
     int64 id = 1;
     string name = 2;
-    User owner = 3;
+    int64 ownerID = 3;
 }
 message EmptyRequest{}
 message EmptyResponse{}
