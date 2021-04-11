@@ -35,13 +35,13 @@ func main() {
 		fmt.Println("you must supply at least one ID")
 		os.Exit(1)
 	} else if len(ids) == 1 {
-		localResult, localErr := localService.GetUser(uint(ids[0]))
+		localResult, localErr := localService.GetUser(ids[0])
 		if localErr != nil {
 			fmt.Printf("localService.GetUser() returned an error: %v\n", localErr)
 		} else {
 			fmt.Printf("localService.GetUser() returned: %+v\n", localResult)
 		}
-		grpcResult, remoteErr := grpcService.GetUser(uint(ids[0]))
+		grpcResult, remoteErr := grpcService.GetUser(ids[0])
 		if remoteErr != nil {
 			fmt.Printf("grpcService.GetUser() returned an error: %v\n", remoteErr)
 		} else {
