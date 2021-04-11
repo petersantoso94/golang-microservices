@@ -33,7 +33,7 @@ func (s *UserServiceController) GetUsers(ctx context.Context, in *pb.GetUsersReq
 	var grpcUser []*pb.User
 	log.Printf("users:%v", users)
 	for _, user := range users {
-		u := marshalUser(&user)
+		u := marshalUser(user)
 		grpcUser = append(grpcUser, u)
 	}
 	return &pb.GetUsersResponse{Users: grpcUser}, nil
@@ -43,7 +43,7 @@ func (s *UserServiceController) GetUser(ctx context.Context, in *pb.GetUserReque
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetUserResponse{User: marshalUser(&user)}, nil
+	return &pb.GetUserResponse{User: marshalUser(user)}, nil
 }
 func (s *UserServiceController) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	userGrpc := in.User

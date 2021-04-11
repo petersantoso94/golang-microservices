@@ -23,7 +23,7 @@ func NewGRPCService(connString string) (user.Service, error) {
 	}
 	return &grpcService{grpcClient: usergrpc.NewUserServiceClient(conn)}, nil
 }
-func (s *grpcService) GetUsers() (result []user.User, err error) {
+func (s *grpcService) GetUsers() (result []*user.User, err error) {
 	req := &usergrpc.GetUsersRequest{}
 	ctx, cancelFunc := context.WithTimeout(context.Background(), defaultRequestTimeout)
 	defer cancelFunc()
@@ -37,7 +37,7 @@ func (s *grpcService) GetUsers() (result []user.User, err error) {
 	}
 	return
 }
-func (s *grpcService) GetUser(id int64) (result user.User, err error) {
+func (s *grpcService) GetUser(id int64) (result *user.User, err error) {
 	req := &usergrpc.GetUserRequest{
 		Id: int64(id),
 	}
@@ -63,13 +63,9 @@ func (s *grpcService) CreateUser(user user.User) (id int64, err error) {
 	id = resp.Id
 	return
 }
-func unmarshalUser(grpcUser *usergrpc.User) (result user.User) {
-	result.ID = grpcUser.Id
-	result.Name = grpcUser.Name
-	return
+func unmarshalUser(grpcUser *usergrpc.User) *user.User {
+	return &user.User{ID: grpcUser.Id, Name: grpcUser.Name}
 }
-func marshalUser(user *user.User) (result *usergrpc.User) {
-	result.Id = int64(user.ID)
-	result.Name = user.Name
-	return
+func marshalUser(user *user.User) *usergrpc.User {
+	return &usergrpc.User{Id: int64(user.ID), Name: user.Name}
 }

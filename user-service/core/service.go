@@ -23,14 +23,14 @@ func NewService() userSvc.Service {
 	}
 }
 
-func (s *service) GetUser(id int64) (result userSvc.User, err error) {
+func (s *service) GetUser(id int64) (result *userSvc.User, err error) {
 	if ok := s.db.First(&result, id); ok.RowsAffected > 0 {
 		return result, nil
 	}
 	return result, userSvc.ErrNotFound
 }
 
-func (s *service) GetUsers() (result []userSvc.User, err error) {
+func (s *service) GetUsers() (result []*userSvc.User, err error) {
 	if ok := s.db.Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
 		return nil, ok.Error
 	}
