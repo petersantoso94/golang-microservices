@@ -1,0 +1,31 @@
+syntax = "proto3";
+option go_package = "github.com/petersantoso94/golang-microservices/movie-service/grpc";
+package grpc;
+service MovieService {
+    rpc GetMovies (EmptyRequest) returns (GetMoviesResponse) {}
+    rpc GetUserMovie (GetUserMovieRequest) returns (GetUserMovieResponse) {}
+    rpc CreateMovie (CreateMovieRequest) returns (EmptyResponse) {}
+}
+message User{
+    int64 id = 1;
+    string name = 2;
+}
+message Movie {
+    int64 id = 1;
+    string name = 2;
+    User owner = 3;
+}
+message EmptyRequest{}
+message EmptyResponse{}
+message GetMoviesResponse{
+    repeated Movie movies = 1;
+}
+message GetUserMovieResponse{
+    repeated Movie movies = 1;
+}
+message GetUserMovieRequest{
+    int64 userId =1;
+}
+message CreateMovieRequest{
+    Movie movie =1;
+}

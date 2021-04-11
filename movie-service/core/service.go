@@ -2,22 +2,45 @@ package core
 
 import (
 	movieSvc "github.com/petersantoso94/golang-microservices/movie-service"
-	"github.com/petersantoso94/golang-microservices/user-service"
+	userSvc "github.com/petersantoso94/golang-microservices/user-service"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type service struct {
-	// a database dependency would go here but instead we're going to have a static map
-	m map[int64]movieSvc.Movie
-	movieSvc.Service
+	db *gorm.DB
 }
 
 // NewService instantiates a new Service.
-func NewService( /* a database connection would be injected here */ ) movieSvc.Service {
-	return &service{
-		m: map[int64]movieSvc.Movie{
-			1: {ID: 1, Name: "Ironman", Owner: user.User{ID: 1}},
-			2: {ID: 2, Name: "Shrek", Owner: user.User{ID: 2}},
-			3: {ID: 3, Name: "SpongeBob", Owner: user.User{ID: 2}},
-		},
+func NewService() movieSvc.Service {
+	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
 	}
+	// Migrate the schema
+	db.AutoMigrate(&movieSvc.Movie{})
+	return &service{
+		db: db,
+	}
+}
+
+func (s *service) GetMovies() (result []*movieSvc.Movie, err error) {
+	if ok := s.db.Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
+		return nil, ok.Error
+	}
+	return result, nil
+}
+
+func (s *service) GetUserMovie(userId int64) (result []*movieSvc.Movie, err error) {
+	if ok := s.db.Where(&userSvc.User{ID: userId}).Find(&result); ok.RowsAffected == 0 || ok.Error != nil {
+		return nil, ok.Error
+	}
+	return result, nil
+}
+
+func (s *service) CreateMovie(movie movieSvc.Movie) error {
+	if result := s.db.Create(&movie); result.RowsAffected == 0 || result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

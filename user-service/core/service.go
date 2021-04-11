@@ -27,7 +27,7 @@ func (s *service) GetUser(id int64) (result *userSvc.User, err error) {
 	if ok := s.db.First(&result, id); ok.RowsAffected > 0 {
 		return result, nil
 	}
-	return result, userSvc.ErrNotFound
+	return nil, userSvc.ErrNotFound
 }
 
 func (s *service) GetUsers() (result []*userSvc.User, err error) {

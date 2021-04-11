@@ -11,14 +11,14 @@ var ErrNotFound = errors.New("not found")
 
 // User is a user business object.
 type Movie struct {
-	ID    int64
+	ID    int64 `gorm:"primarykey"`
 	Name  string
 	Owner userSvc.User
 }
 
 // Service defines the interface exposed by this package.
 type Service interface {
-	GetMovie(name string) (Movie, error)
-	GetMovies() (map[int64]Movie, error)
-	GetUserMovie(userId []int64) (map[int64]Movie, error)
+	GetMovies() ([]*Movie, error)
+	GetUserMovie(userId int64) ([]*Movie, error)
+	CreateMovie(Movie) error
 }

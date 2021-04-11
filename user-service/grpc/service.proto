@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/petersantoso94/golang-microservices/grpc";
+option go_package = "github.com/petersantoso94/golang-microservices/user-service/grpc";
 package grpc;
 service UserService {
   rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
