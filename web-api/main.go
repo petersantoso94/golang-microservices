@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	userCtr "github.com/petersantoso94/golang-microservices/web-api/user"
+	movieCtr "github.com/petersantoso94/golang-microservices/web-api/movie"
 )
 
 var (
@@ -17,6 +18,7 @@ var (
 
 func main() {
 	userApi := userCtr.NewController(&userCtr.UserApiConn{MovieServiceUrl: movieSvcUrl, UserServiceUrl: userSvcUrl})
+	movieApi := movieCtr.NewController(&movieCtr.MovieApiConn{MovieServiceUrl: movieSvcUrl})
 
 	engine := gin.New()
 	engine.Use(gin.Recovery())
@@ -27,9 +29,14 @@ func main() {
 
 	baseGroup := engine.Group("/api/v1")
 	{
-		userGroup := baseGroup.Group("/users")
+		usersGroup := baseGroup.Group("/users")
 		{
-			userGroup.GET("", userApi.GetUsers)
+			usersGroup.GET("", userApi.GetUsers)
+			usersGroup.GET("/:id/movies", userApi.GetMoviesByUserId)
+		}
+		moviesGroup := baseGroup.Group("/movies")
+		{
+			moviesGroup.GET("", movieApi.GetMovies)
 		}
 	}
 

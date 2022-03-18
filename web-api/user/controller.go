@@ -3,6 +3,7 @@ package controller
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 
@@ -10,6 +11,7 @@ import (
 	movieClient "github.com/petersantoso94/golang-microservices/movie-service/grpc/client"
 	userSvc "github.com/petersantoso94/golang-microservices/user-service"
 	userClient "github.com/petersantoso94/golang-microservices/user-service/grpc/client"
+	errHandler "github.com/petersantoso94/golang-microservices/web-api/common"
 )
 
 type UserController struct {
@@ -38,7 +40,22 @@ func NewController(c *UserApiConn) *UserController {
 func (u *UserController) GetUsers(ctx *gin.Context) {
 	res, err := u.userService.GetUsers()
 	if err != nil {
-		ctx.AbortWithError(http.StatusInternalServerError, err)
+		errHandler.ErrorHandler(ctx,http.StatusInternalServerError,err)
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (u *UserController) GetMoviesByUserId(ctx *gin.Context) {
+	userId,errC := strconv.ParseInt(ctx.Param("id"),10,64)
+	if  errC != nil {
+		errHandler.ErrorHandler(ctx,http.StatusBadRequest,errC)
+		return
+	}
+	res, err := u.movieService.GetUserMovie(userId)
+	if err != nil {
+		errHandler.ErrorHandler(ctx,http.StatusInternalServerError,err)
+		return
 	}
 	ctx.JSON(http.StatusOK, res)
 }
