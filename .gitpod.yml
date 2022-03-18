@@ -2,6 +2,8 @@ image:
   file: .gitpod.Dockerfile
 ports:
   - port: 9000
+  - port: 9001
+  - port: 8081
 tasks:
   - init: |
         export GO111MODULE=on
